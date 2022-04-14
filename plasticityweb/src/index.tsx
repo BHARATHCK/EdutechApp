@@ -1,31 +1,12 @@
-import { ColorModeScript } from "@chakra-ui/react";
-import { ChakraProvider } from "@chakra-ui/react";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Login from "./routes/Login";
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ChakraProvider>
-      <BrowserRouter>
-        <ColorModeScript />
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
-    </ChakraProvider>
-  </React.StrictMode>,
-  document.getElementById("root"),
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
+// PWA Config -> TODO
 serviceWorker.unregister();
 
 // If you want to start measuring performance in your app, pass a function
