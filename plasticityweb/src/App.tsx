@@ -4,6 +4,7 @@ import useAuth, { AuthProvider } from "./useAuth";
 import { BrowserRouter, Routes, Route, RouteProps, Navigate } from "react-router-dom";
 import AuthScreen from "./components/Login";
 import Home from "./components/Home/Home";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 export const App = () => {
   function Router() {
@@ -13,6 +14,7 @@ export const App = () => {
         <Route path="/" element={user ? <Home /> : <Navigate replace={true} to="/login" />} />
         <Route path="/login" element={user ? <Home /> : <AuthScreen />} />
         <Route path="/sign_up" element={user ? <Home /> : <AuthScreen />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <AuthScreen />} />
       </Routes>
     );
   }

@@ -1,12 +1,13 @@
-import { Box, Text, Link, VStack, Code, Grid, theme } from "@chakra-ui/react";
+import { Box, Text, Link, VStack, Code, Grid, theme, Button } from "@chakra-ui/react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import { Logo } from "../../Logo";
 import useAuth from "../../useAuth";
 
 const Home = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  console.log("HOME RENDERED ******* ,  ", user);
   return (
     <Box textAlign="center" fontSize="xl">
       <Grid minH="100vh" p={3}>
@@ -27,6 +28,13 @@ const Home = () => {
           </Link>
         </VStack>
       </Grid>
+      <Button
+        onClick={() => {
+          navigate("/dashboard");
+        }}
+      >
+        Click to show user
+      </Button>
     </Box>
   );
 };
