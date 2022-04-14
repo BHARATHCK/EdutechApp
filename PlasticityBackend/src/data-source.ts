@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import { Course } from "./entity/Course";
 import { User } from "./entity/User";
 import { Video } from "./entity/Video";
+require("dotenv").config();
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -17,5 +18,5 @@ export const AppDataSource = new DataSource({
       rejectUnauthorized: false,
     },
   },
-  url: process.env.POSTGRES_URL,
+  url: process.env.POSTGRES_DB_URL,
 });

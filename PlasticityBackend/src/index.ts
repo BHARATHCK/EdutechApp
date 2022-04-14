@@ -6,13 +6,20 @@ import { Routes } from "./routes";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
-import cookieParser from "cookie-parser";
 require("dotenv").config();
 import cors from "cors";
 
 declare module "express-session" {
   export interface SessionData {
-    user: { [key: string]: any };
+    user: {
+      firstName: string;
+      id: number;
+      lastName: string;
+      password: string;
+      email: string;
+      role: string;
+      isActive: boolean;
+    };
   }
 }
 
@@ -21,16 +28,14 @@ AppDataSource.initialize()
     // create express app
     const app = express();
     app.use(bodyParser.json());
-    app.use(cookieParser());
+
     const oneDay = 1000 * 60 * 60 * 24;
 
     // Redis Client
     const redis = new Redis({
       host: process.env.REDIS_DB_HOST,
       password: process.env.REDIS_DB_PASSWORD || "",
-      port: parseInt(
-        process.env.REDIS_DB_PORT ? process.env.REDIS_DB_PORT : ""
-      ),
+      port: parseInt(process.env.REDIS_DB_PORT ? process.env.REDIS_DB_PORT : ""),
     });
 
     // Redis store
@@ -41,7 +46,7 @@ AppDataSource.initialize()
     // cors
     const corsOptions = {
       origin: [process.env.WEB_APP_URL || ""],
-      credentials: true,
+      credentials: true, // <-- REQUIRED backend setting
     };
 
     // set cors
@@ -59,41 +64,41 @@ AppDataSource.initialize()
         cookie: {
           maxAge: oneDay,
           httpOnly: true,
-          secure: false, //cookie only in https
-          sameSite: "none",
         },
-        saveUninitialized: false,
+        saveUninitialized: true,
         secret: process.env.REDIS_SESSION_SECRET || "",
         resave: false,
-      })
+      }),
     );
 
     // register express routes from defined application routes
     Routes.forEach((route) => {
-      (app as any)[route.method](
-        route.route,
-        (req: Request, res: Response, next: Function) => {
-          const result = new (route.controller as any)()[route.action](
-            req,
-            res,
-            next
+      (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
+        const result = new (route.controller as any)()[route.action](req, res, next);
+        if (result instanceof Promise) {
+          result.then((result) =>
+            result !== null && result !== undefined ? res.send(result) : undefined,
           );
-          if (result instanceof Promise) {
-            result.then((result) =>
-              result !== null && result !== undefined
-                ? res.send(result)
-                : undefined
-            );
-          } else if (result !== null && result !== undefined) {
-            res.json(result);
-          }
+        } else if (result !== null && result !== undefined) {
+          res.json(result);
         }
-      );
+      });
     });
 
     // start express server
     app.listen(3000);
 
-    console.log("port 3000. http://localhost:3000/users");
+    // // insert Teacher credential for testing
+    // await AppDataSource.manager.save(
+    //     AppDataSource.manager.create(User, {
+    //         firstName: "Richard",
+    //         lastName: "Feynman",
+    //         email: "richard.feynman@plasticity.com",
+    //         role: "teacher",
+    //         isActive: true
+    //     })
+    // )
+
+    console.log("Server has started on port 3000.");
   })
   .catch((error) => console.log(error));
