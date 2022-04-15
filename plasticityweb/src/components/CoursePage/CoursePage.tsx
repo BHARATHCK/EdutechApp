@@ -5,6 +5,8 @@ import { getCourse } from "../../api/course";
 import { Course, Video } from "../../types";
 import Header from "../Header/Header";
 import ReactPlayer from "react-player";
+import MDEditor from "@uiw/react-md-editor";
+import rehypeSanitize from "rehype-sanitize";
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -35,11 +37,22 @@ const CoursePage = () => {
       <Header />
       <Flex justifyContent="center">
         {!courseId && <>Nothing to see here !!</>}
-        <Flex direction={{ base: "column", md: "row" }}>
+        {viewNotes && (
+          <MDEditor.Markdown source={course.notes} rehypePlugins={[[rehypeSanitize]]} />
+        )}
+
+        <Flex direction={{ base: "column", md: "row" }} hidden={viewNotes}>
           <Box w={[300, 400, 500]} m={10} h="100%">
             <Center h="100%">
               <Box justifyContent="center" mt={10} mb={10}>
-                <ReactPlayer controls={true} url={currVideoUrl} pip={viewNotes} />
+                <ReactPlayer
+                  controls={true}
+                  url={currVideoUrl}
+                  pip={viewNotes}
+                  onDisablePIP={() => {
+                    setViewNotes(false);
+                  }}
+                />
                 <Button
                   onClick={handleViewNotes}
                   mt={10}

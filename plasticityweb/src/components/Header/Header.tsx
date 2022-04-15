@@ -1,9 +1,13 @@
 import { Box, Stack, Heading, Flex, Text, Button, useDisclosure } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import SearchBar from "../SearchBar/Searchbar";
+import useAuth from "../../useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Header = (props: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const handleToggle = () => (isOpen ? onClose() : onOpen());
 
   return (
@@ -39,6 +43,18 @@ const Header = (props: any) => {
       </Stack>
 
       <Box display={{ base: isOpen ? "block" : "none", md: "block" }} mt={{ base: 4, md: 0 }}>
+        {user?.role != "students" && (
+          <Button
+            variant="outline"
+            _hover={{ bg: "blue.400", borderColor: "teal.700" }}
+            mr={5}
+            onClick={() => {
+              navigate("/createcourse");
+            }}
+          >
+            Create Course
+          </Button>
+        )}
         <Button variant="outline" _hover={{ bg: "blue.400", borderColor: "teal.700" }}>
           Log Out
         </Button>
