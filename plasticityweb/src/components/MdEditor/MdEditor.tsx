@@ -18,7 +18,7 @@ const MdEditor = ({ currentFormData, setFormData, setNextSteps }: any) => {
     buttonProps: { "aria-label": "CONTINUE" },
     value: "Continue",
     execute: (state: TextState, api: TextAreaTextApi) => {
-      setFormData({ ...currentFormData, notes: state });
+      setFormData({ ...currentFormData, notes: state.text });
       setNextSteps(2);
     },
   };

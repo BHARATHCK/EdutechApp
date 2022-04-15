@@ -1,4 +1,5 @@
 import { UserController } from "./controller/UserController";
+import { CourseController } from "./controller/CourseController";
 
 export const Routes = [
   {
@@ -42,5 +43,23 @@ export const Routes = [
     route: "/me",
     controller: UserController,
     action: "me",
+  },
+  {
+    method: "post",
+    route: "/createcourse",
+    controller: CourseController,
+    action: "save",
+  },
+  {
+    method: "get",
+    route: "/courses",
+    controller: CourseController,
+    action: "getAllCourses",
+  },
+  {
+    method: "post",
+    route: "/course",
+    controller: CourseController,
+    action: "getCourseById",
   },
 ];

@@ -58,7 +58,7 @@ export class UserController {
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(request.body.params.password, salt);
 
-    this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
 
     request.session.user = newUser;
 

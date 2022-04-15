@@ -30,7 +30,7 @@ const Home = () => {
       </Grid>
       <Button
         onClick={() => {
-          navigate("/dashboard");
+          navigate("/createcourse");
         }}
       >
         Click to show user

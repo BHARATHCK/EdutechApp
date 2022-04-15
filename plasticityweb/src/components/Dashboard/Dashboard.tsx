@@ -1,10 +1,16 @@
 import {
+  Badge,
+  Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Grid,
+  Image,
   Input,
   Select,
+  SimpleGrid,
   Switch,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
@@ -13,124 +19,59 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import MdEditor from "../MdEditor/MdEditor";
 import FilePicker from "../FilePicker/FilePicker";
+import { getAllCourses } from "../../api/course";
+import { Course } from "../../types";
+import Header from "../Header/Header";
+import ButtonChip from "../ButtonChip/ButtonChip";
+import { Link, Outlet } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [formData, setFormData] = useState({});
-  const [nextSteps, setNextSteps] = useState(0);
-
-  const courseValidationSchema = Yup.object().shape({
-    courseName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-    courseType: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-    description: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-    author: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-  });
+  const [courses, setCourses] = useState([] as any);
 
   useEffect(() => {
-    console.log("FORMDATA IN STATE : ", formData);
-  }, [formData]);
-
+    getAllCourses().then((data) => {
+      setCourses(data);
+    });
+  }, []);
   return (
     <div>
-      {nextSteps === 1 ? (
-        <MdEditor
-          currentFormData={formData}
-          setFormData={setFormData}
-          setNextSteps={setNextSteps}
-        />
-      ) : nextSteps === 0 ? (
-        <Formik
-          initialValues={{
-            courseName: "",
-            courseType: "",
-            description: "",
-            isPublished: false,
-            author: user?.email,
-          }}
-          validationSchema={courseValidationSchema}
-          onSubmit={(values, { setSubmitting, setFieldError }) => {
-            console.log("Sending request : ", values);
-            setFormData(values);
-            setNextSteps(1);
-            setSubmitting(false);
-          }}
-        >
-          {(props) => (
-            <Form>
-              <Field name="courseName">
-                {({ field, form }: any) => (
-                  <FormControl isInvalid={form.errors.courseName && form.touched.courseName}>
-                    <FormLabel htmlFor="courseName">Course name</FormLabel>
-                    <Input size="md" {...field} id="courseName" placeholder="Course Name" />
-                    <FormErrorMessage>{form.errors.courseName}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <Field name="courseType">
-                {({ field, form }: any) => (
-                  <FormControl isInvalid={form.errors.courseType && form.touched.courseType}>
-                    <FormLabel htmlFor="courseType">Course Type</FormLabel>
-                    <Select {...field} id="courseType" placeholder="Select Course Type">
-                      <option>Notes Only</option>
-                      <option>Video Only</option>
-                      <option>Video + Notes</option>
-                    </Select>
-                    <FormErrorMessage>{form.errors.courseType}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <Field name="description">
-                {({ field, form }: any) => (
-                  <FormControl isInvalid={form.errors.description && form.touched.description}>
-                    <FormLabel htmlFor="description">Description</FormLabel>
-                    <Input
-                      {...field}
-                      id="description"
-                      placeholder="Breif description about the course"
-                    />
-                    <FormErrorMessage>{form.errors.description}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-
-              <Field name="isPublished">
-                {({ field, form }: any) => (
-                  <FormControl isInvalid={form.errors.isPublished && form.touched.isPublished}>
-                    <FormLabel htmlFor="isPublished">Publish ?</FormLabel>
-                    <Switch id="isPublished" {...field} />
-                    <FormErrorMessage>{form.errors.isPublished}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-
-              <Field name="author">
-                {({ field, form }: any) => (
-                  <FormControl isInvalid={form.errors.author && form.touched.author}>
-                    <FormLabel htmlFor="author">Author</FormLabel>
-                    <Input
-                      {...field}
-                      id="passwordConfirmation"
-                      placeholder="Re-Type Password"
-                      readOnly={true}
-                      value={`${user?.firstName} <${user?.email}>`}
-                    ></Input>
-                    <FormErrorMessage>{form.errors.author}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
-              <Button mt={4} colorScheme="teal" isLoading={props.isSubmitting} type="submit">
-                Submit
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      ) : nextSteps === 2 ? (
-        <FilePicker
-          currentFormData={formData}
-          setCurrentFormData={setFormData}
-          setnextSteps={setNextSteps}
-        />
-      ) : null}
+      <Header />
+      <Flex flexDir="row" gap={10} justifyContent="center" mt={10} mb={10} alignItems="center">
+        <ButtonChip buttonName="Video Based Courses" />
+        <ButtonChip buttonName="Text Based Courses" />
+      </Flex>
+      <SimpleGrid columns={[1, 3, 4]} spacing="20px" m={10}>
+        {courses.map((course: Course) => (
+          <Link
+            style={{ display: "block", margin: "1rem 0" }}
+            to={`/course/${course.id}`}
+            key={course.id}
+          >
+            <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" cursor="pointer">
+              <Image src="https://www.freecodecamp.org/news/content/images/2021/06/Ekran-Resmi-2019-11-18-18.08.13.png" />
+              <Box p="6">
+                <Box display="flex" alignItems="baseline">
+                  <Badge borderRadius="full" px="2" colorScheme="teal">
+                    {course.courseType}
+                  </Badge>
+                  <Box
+                    color="gray.500"
+                    fontWeight="semibold"
+                    letterSpacing="wide"
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    ml="2"
+                  >
+                    {course.courseName}
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Link>
+        ))}
+      </SimpleGrid>
+      <Outlet />
     </div>
   );
 };
