@@ -65,6 +65,7 @@ it("Passwords must match", async () => {
 
   fireEvent.blur(retypePassword);
 
+  // TODO
   await waitFor(() => {
     expect(getByTestId("passwordConfirmationError")).not.toBe(null);
     expect(getByTestId("passwordConfirmationError")).toHaveTextContent("Passwords must match");
