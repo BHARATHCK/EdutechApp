@@ -5,6 +5,7 @@ import { createCourse } from "../../api/course";
 import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Video } from "../../types";
 import { v4 as uuid } from "uuid";
+import { useFetchAllCourses } from "../../useFetch";
 
 // @ts-ignore
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -17,6 +18,7 @@ const s3Config = {
 };
 
 const FilePicker = ({ currentFormData, setCurrentFormData, setnextSteps }: any) => {
+  const { setClearCache } = useFetchAllCourses(process.env.REACT_APP_BACKEND_URL);
   const [formValues, setFormValues] = useState(
     currentFormData.videos || [
       { videotitle: "", videodescription: "", video: "", selectedFile: {} },
@@ -100,10 +102,12 @@ const FilePicker = ({ currentFormData, setCurrentFormData, setnextSteps }: any) 
       courseRes
         .then((res) => {
           if (res) {
+            setClearCache(true);
             navigate("/publish", { state: { isSuccess: true } });
           }
         })
         .catch((error) => {
+          setClearCache(true);
           navigate("/publish", { state: { isSuccess: false } });
         });
     });

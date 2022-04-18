@@ -37,6 +37,7 @@ export class CourseController {
   }
 
   async save(request: Request, response: Response, next: NextFunction) {
+    console.log(" Course data ", request.body.params);
     const newVideos: Video[] = [];
     const newCourse = new Course();
     try {
@@ -45,6 +46,7 @@ export class CourseController {
       newCourse.courseType = request.body.params.courseType;
       newCourse.isPublished = request.body.params.isPublished;
       newCourse.notes = request.body.params.notes;
+      newCourse.thumbnail = request.body.params.thumbnail || null;
 
       // Handle videos
       request.body.params.videos.map((video: Video) => {
@@ -60,6 +62,7 @@ export class CourseController {
         newVideos.push(newVideo);
       });
     } catch (error) {
+      console.log(error);
       return 500;
     }
 
@@ -68,6 +71,7 @@ export class CourseController {
       await this.courseRepository.save(newCourse);
       await this.videoRepository.save(newVideos);
     } catch (error) {
+      console.log("SOME ERROR **** : ", error);
       entitySaved = 400;
     }
 

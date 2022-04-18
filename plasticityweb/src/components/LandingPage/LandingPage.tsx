@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Text, useMediaQuery, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as LandingImage2 } from "../../assets/landing_image_2.svg";
 import { ReactComponent as LandingImage3 } from "../../assets/landing_image_3.svg";
@@ -9,6 +9,7 @@ import "./LandingPage.style.scss";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   return (
     <>
       <Flex alignItems="center" justifyContent="center" m={10} flexDir="column">
@@ -35,8 +36,9 @@ const LandingPage = () => {
             />
           </Flex>
         </Box>
+        <Spacer />
         <Box w={[400, 500, 1200]} h="lg" m={20}>
-          <Flex flexDir="row">
+          <Flex flexDir={isLargerThan768 ? "row" : "column"} m={10} mb="96">
             <Box w="xs">
               <LandingImage2 />
               <Text fontSize="large" fontWeight="bold" mt="4">
@@ -71,102 +73,107 @@ const LandingPage = () => {
             </Box>
           </Flex>
         </Box>
-        <Box w={[400, 500, 1200]} h="lg" m={20}>
-          <Flex flexDir="row" alignItems="center">
-            <Box>
-              <Flex flexDir="column">
+        <Spacer />
+        <Flex>
+          <Box w={[400, 500, 1200]} h="lg">
+            <Flex flexDir="row" alignItems="center" m={isLargerThan768 ? "" : 10}>
+              <Box>
+                <Flex flexDir="column">
+                  <Box>
+                    <Text fontSize="large" fontWeight="bold" mt="4">
+                      Start learning with Plasticity
+                    </Text>
+                    <Text fontSize="md" fontWeight="light" mt="4">
+                      Get unlimited access to structured courses & doubt clearing sessions
+                    </Text>
+                  </Box>
+                  <Box>
+                    <PlasticityButton
+                      handleClick={() => {
+                        navigate("/dashboard");
+                      }}
+                      isSubmitting={false}
+                      text="Start Learning"
+                      variant="outline"
+                      addMargin={true}
+                    />
+                  </Box>
+                </Flex>
+              </Box>
+              {isLargerThan768 ? (
                 <Box>
-                  <Text fontSize="large" fontWeight="bold" mt="4">
-                    Start learning with Plasticity
-                  </Text>
-                  <Text fontSize="md" fontWeight="light" mt="4">
-                    Get unlimited access to structured courses & doubt clearing sessions
-                  </Text>
+                  <Flex flexDir="row" alignItems="center">
+                    <Box m={10}>
+                      {/* image stack 1 */}
+                      <VStack spacing="24px">
+                        <Box
+                          boxShadow="lg"
+                          borderRadius="2xl"
+                          w={300}
+                          h={200}
+                          className="showcase-image-1"
+                        >
+                          <Text fontSize="md" fontWeight="semibold" m={10}>
+                            1+ Categories
+                          </Text>
+                        </Box>
+                        <Box
+                          boxShadow="lg"
+                          borderRadius="2xl"
+                          w={300}
+                          h={200}
+                          className="showcase-image-2"
+                        >
+                          <Text fontSize="md" fontWeight="semibold" m={10}>
+                            Daily Live classes
+                          </Text>
+                        </Box>
+                        <Box
+                          boxShadow="lg"
+                          borderRadius="2xl"
+                          w={300}
+                          h={200}
+                          className="showcase-image-3"
+                        >
+                          <Text fontSize="md" fontWeight="semibold" m={10}>
+                            5+ Mins Watched
+                          </Text>
+                        </Box>
+                      </VStack>
+                    </Box>
+                    <Box m={10}>
+                      {/* Image stack 2 */}
+                      <VStack spacing="24px">
+                        <Box
+                          boxShadow="lg"
+                          borderRadius="2xl"
+                          w={300}
+                          h={200}
+                          className="showcase-image-4"
+                        >
+                          <Text fontSize="md" fontWeight="semibold" m={10}>
+                            1+ Educators
+                          </Text>
+                        </Box>
+                        <Box
+                          boxShadow="lg"
+                          borderRadius="2xl"
+                          w={300}
+                          h={200}
+                          className="showcase-image-5"
+                        >
+                          <Text fontSize="md" fontWeight="semibold" m={10}>
+                            20+ Video Lessons
+                          </Text>
+                        </Box>
+                      </VStack>
+                    </Box>
+                  </Flex>
                 </Box>
-                <Box>
-                  <PlasticityButton
-                    handleClick={() => {
-                      navigate("/dashboard");
-                    }}
-                    isSubmitting={false}
-                    text="Start Learning"
-                    variant="outline"
-                    addMargin={true}
-                  />
-                </Box>
-              </Flex>
-            </Box>
-            <Box>
-              <Flex flexDir="row" alignItems="center">
-                <Box m={10}>
-                  {/* image stack 1 */}
-                  <VStack spacing="24px">
-                    <Box
-                      boxShadow="lg"
-                      borderRadius="2xl"
-                      w={300}
-                      h={200}
-                      className="showcase-image-1"
-                    >
-                      <Text fontSize="md" fontWeight="semibold" m={10}>
-                        1+ Categories
-                      </Text>
-                    </Box>
-                    <Box
-                      boxShadow="lg"
-                      borderRadius="2xl"
-                      w={300}
-                      h={200}
-                      className="showcase-image-2"
-                    >
-                      <Text fontSize="md" fontWeight="semibold" m={10}>
-                        Daily Live classes
-                      </Text>
-                    </Box>
-                    <Box
-                      boxShadow="lg"
-                      borderRadius="2xl"
-                      w={300}
-                      h={200}
-                      className="showcase-image-3"
-                    >
-                      <Text fontSize="md" fontWeight="semibold" m={10}>
-                        5+ Mins Watched
-                      </Text>
-                    </Box>
-                  </VStack>
-                </Box>
-                <Box m={10}>
-                  {/* Image stack 2 */}
-                  <VStack spacing="24px">
-                    <Box
-                      boxShadow="lg"
-                      borderRadius="2xl"
-                      w={300}
-                      h={200}
-                      className="showcase-image-4"
-                    >
-                      <Text fontSize="md" fontWeight="semibold" m={10}>
-                        1+ Educators
-                      </Text>
-                    </Box>
-                    <Box
-                      boxShadow="lg"
-                      borderRadius="2xl"
-                      w={300}
-                      h={200}
-                      className="showcase-image-5"
-                    >
-                      <Text fontSize="md" fontWeight="semibold" m={10}>
-                        20+ Video Lessons
-                      </Text>
-                    </Box>
-                  </VStack>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
-        </Box>
+              ) : null}
+            </Flex>
+          </Box>
+        </Flex>
       </Flex>
     </>
   );

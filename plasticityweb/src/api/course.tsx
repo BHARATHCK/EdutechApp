@@ -17,13 +17,6 @@ export async function createCourse(params: {
   return response.data;
 }
 
-export async function getAllCourses(): Promise<Course[]> {
-  const response = await redaxios.get(`${process.env.REACT_APP_BACKEND_URL}/courses`, {
-    withCredentials: true,
-  });
-  return response.data;
-}
-
 export async function getCourse(params: { courseId: number }): Promise<Course> {
   const response = await redaxios.post(
     `${process.env.REACT_APP_BACKEND_URL}/course`,

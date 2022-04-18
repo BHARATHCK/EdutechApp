@@ -8,6 +8,7 @@ import ReactPlayer from "react-player";
 import MDEditor from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
 import "./CoursePage.styles.scss";
+import PlasticityButton from "../PlasticityButton/PlasticityButton";
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -62,7 +63,22 @@ const CoursePage = () => {
       <Flex justifyContent="center">
         {!courseId && <>Nothing to see here !!</>}
         {viewNotes && (
-          <MDEditor.Markdown source={course.notes} rehypePlugins={[[rehypeSanitize]]} />
+          <>
+            <Flex flexDir="column" m={10}>
+              <Box mb={10}>
+                <PlasticityButton
+                  addMargin={false}
+                  handleClick={() => {
+                    handleViewNotes();
+                  }}
+                  isSubmitting={false}
+                  text="Go Back"
+                  variant="outline"
+                />
+              </Box>
+              <MDEditor.Markdown source={course.notes} rehypePlugins={[[rehypeSanitize]]} />
+            </Flex>
+          </>
         )}
 
         <Flex

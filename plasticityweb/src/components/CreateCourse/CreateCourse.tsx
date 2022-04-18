@@ -19,8 +19,9 @@ import { useEffect, useState } from "react";
 import MdEditor from "../MdEditor/MdEditor";
 import FilePicker from "../FilePicker/FilePicker";
 import "./CreateCourse.styles.scss";
-import PublishFeedback from "../feedback/PublishFeedback";
 import { useNavigate } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
+import redaxios from "redaxios";
 
 const CreateCourse = () => {
   const { user } = useAuth();
@@ -28,12 +29,14 @@ const CreateCourse = () => {
   const [nextSteps, setNextSteps] = useState(1);
   const [progressValue, setProgressValue] = useState(1);
   const navigate = useNavigate();
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   const courseValidationSchema = Yup.object().shape({
     courseName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
     courseType: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
     description: Yup.string().min(10, "Too Short!").max(500, "Too Long!").required("Required"),
     author: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
+    thumbnail: Yup.mixed().required(),
   });
 
   useEffect(() => {
@@ -91,19 +94,26 @@ const CreateCourse = () => {
                   courseName: formData?.courseName,
                   courseType: formData?.courseType,
                   description: formData?.description,
-                  isPublished: formData?.isPublished,
+                  isPublished: formData?.isPublished || false,
                   author: user?.email,
+                  thumbnail: formData?.thumbnail || null,
                 }}
                 validationSchema={courseValidationSchema}
                 onSubmit={(values, { setSubmitting, setFieldError }) => {
-                  setFormData({ ...formData, ...values });
-                  // If Notes only set to 2, if videos only set to 3, else set to 2
-                  if (values.courseType === "Video Only") {
-                    setNextSteps(3);
-                  } else {
-                    setNextSteps(2);
-                  }
-                  setSubmitting(false);
+                  // Upload file to cloudinary and save the url in thumbnail;
+                  const imageUrl = uploadImageToCloudinary(values.thumbnail).then(
+                    (imageResponse) => {
+                      values.thumbnail = imageResponse;
+                      setFormData({ ...formData, ...values });
+                      // If Notes only set to 2, if videos only set to 3, else set to 2
+                      if (values.courseType === "Video Only") {
+                        setNextSteps(3);
+                      } else {
+                        setNextSteps(2);
+                      }
+                      setSubmitting(false);
+                    },
+                  );
                 }}
               >
                 {(props) => (
@@ -130,7 +140,7 @@ const CreateCourse = () => {
                       )}
                     </Field>
                     <Field name="courseType">
-                      {({ field, form, handleBlur, handleChange }: any) => (
+                      {({ field, form, handleBlur, handleChange, setFieldValue }: any) => (
                         <FormControl isInvalid={form.errors.courseType && form.touched.courseType}>
                           <FormLabel htmlFor="courseType">Course Type</FormLabel>
                           <Select
@@ -171,6 +181,18 @@ const CreateCourse = () => {
                           />
                           <FormErrorMessage data-testid="descriptionError">
                             {form.errors.description}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+
+                    <Field name="thumbnail">
+                      {({ field, form }: any) => (
+                        <FormControl isInvalid={form.errors.thumbnail && form.touched.thumbnail}>
+                          <FormLabel htmlFor="thumbnail">Thumbnail</FormLabel>
+                          <UploadComponent setFieldValue={props.setFieldValue} />
+                          <FormErrorMessage data-testid="thumbnailError">
+                            {form.errors.thumbnail}
                           </FormErrorMessage>
                         </FormControl>
                       )}
@@ -245,6 +267,42 @@ const CreateCourse = () => {
       </Flex>
     </Box>
   );
+};
+
+const UploadComponent = (props) => {
+  const { setFieldValue } = props;
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: "image/*",
+    onDrop: (acceptedFiles) => {
+      setFieldValue("thumbnail", acceptedFiles);
+    },
+  });
+  return (
+    <div>
+      {}
+      <div {...getRootProps({ className: "dropzone" })}>
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the files here ...</p>
+        ) : (
+          <p>Drag 'n' drop some files here, or click to select files</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const uploadImageToCloudinary = async (file) => {
+  const uploadURL = process.env.REACT_APP_CLOUDINARY_API;
+  const uploadPreset = process.env.REACT_APP_CLOUDINARY_PRESET;
+  const formData = new FormData();
+  formData.append("file", file[0]);
+  formData.append("upload_preset", uploadPreset);
+
+  const response = await redaxios.post(uploadURL, formData, { withCredentials: false });
+
+  const res = await response.data;
+  return res.url;
 };
 
 export default CreateCourse;

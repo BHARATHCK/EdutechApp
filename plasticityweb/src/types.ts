@@ -8,6 +8,7 @@ export interface User {
 }
 
 export interface Course {
+  thumbnail: string;
   id: number;
   courseName: string;
   courseType: string;
