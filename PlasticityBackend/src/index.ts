@@ -45,7 +45,7 @@ AppDataSource.initialize()
 
     // cors
     const corsOptions = {
-      origin: [process.env.WEB_APP_URL || ""],
+      origin: true,
       credentials: true, // For getting cookies and setting them on headers
     };
 
@@ -64,6 +64,7 @@ AppDataSource.initialize()
         cookie: {
           maxAge: oneDay,
           httpOnly: true,
+          secure: true,
         },
         saveUninitialized: true,
         secret: process.env.REDIS_SESSION_SECRET || "",
