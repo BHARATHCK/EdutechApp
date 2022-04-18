@@ -8,8 +8,14 @@ interface AuthContextType {
   user?: User;
   loading: boolean;
   error?: any;
-  login: (email: string, password: string) => void;
-  signUp: (email: string, firstName: string, lastName: string, password: string) => void;
+  login: (email: string, password: string) => any;
+  signUp: (
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+    role: string,
+  ) => any;
   logout: () => void;
 }
 
@@ -45,30 +51,52 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   function login(email: string, password: string) {
     setLoading(true);
 
-    sessionsApi
-      .Login({ email, password })
-      .then((user: User) => {
-        setUser(user);
-        navigate("/");
-      })
-      .catch((error: any) => setError(error))
-      .finally(() => setLoading(false));
+    const response = new Promise((resolve, reject) => {
+      sessionsApi
+        .Login({ email, password })
+        .then((user: User) => {
+          setUser(user);
+          navigate("/");
+          resolve(user);
+        })
+        .catch((error: any) => {
+          setError(error);
+          reject(error);
+        })
+        .finally(() => setLoading(false));
+    });
+
+    return response;
   }
 
   // SignUp function to create user, On success update user state and redirect user
-  function signUp(email: string, firstName: string, lastName: string, password: string) {
+  function signUp(
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+    role: string,
+  ) {
     setLoading(true);
+    const newResp = new Promise((resolve, reject) => {
+      usersApi
+        .signUp({ email, firstName, lastName, password, role })
+        .then((user: User) => {
+          setUser(user);
+          navigate("/");
+          resolve(user);
+        })
+        .catch((error: any) => {
+          setError(error);
+          reject(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    });
 
-    usersApi
-      .signUp({ email, firstName, lastName, password })
-      .then((user: User) => {
-        setUser(user);
-        navigate("/");
-      })
-      .catch((error: any) => setError(error))
-      .finally(() => setLoading(false));
+    return newResp;
   }
-
   // Logout
   function logout() {
     sessionsApi.logout().then(() => setUser(undefined));

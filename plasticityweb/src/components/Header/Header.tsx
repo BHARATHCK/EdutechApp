@@ -2,12 +2,13 @@ import { Box, Stack, Heading, Flex, Text, Button, useDisclosure } from "@chakra-
 import { HamburgerIcon } from "@chakra-ui/icons";
 import SearchBar from "../SearchBar/Searchbar";
 import useAuth from "../../useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../api/sessionAPI";
 
 const Header = (props: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout: sessionLogout } = useAuth();
   const handleToggle = () => (isOpen ? onClose() : onOpen());
 
   return (
@@ -23,7 +24,9 @@ const Header = (props: any) => {
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg" letterSpacing={"tighter"}>
-          Plasticity Academy
+          <Link to="/dashboard">
+            <Text>Plasticity Academy</Text>
+          </Link>
         </Heading>
       </Flex>
 
@@ -43,7 +46,7 @@ const Header = (props: any) => {
       </Stack>
 
       <Box display={{ base: isOpen ? "block" : "none", md: "block" }} mt={{ base: 4, md: 0 }}>
-        {user?.role != "students" && (
+        {user?.role === "teacher" && (
           <Button
             variant="outline"
             _hover={{ bg: "blue.400", borderColor: "teal.700" }}
@@ -55,9 +58,29 @@ const Header = (props: any) => {
             Create Course
           </Button>
         )}
-        <Button variant="outline" _hover={{ bg: "blue.400", borderColor: "teal.700" }}>
-          Log Out
-        </Button>
+        {user ? (
+          <Button
+            variant="outline"
+            _hover={{ bg: "blue.400", borderColor: "teal.700" }}
+            onClick={() => {
+              logout();
+              navigate("/");
+              sessionLogout();
+            }}
+          >
+            Log Out
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            _hover={{ bg: "blue.400", borderColor: "teal.700" }}
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Sign In
+          </Button>
+        )}
       </Box>
     </Flex>
   );

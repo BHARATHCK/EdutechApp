@@ -1,0 +1,11 @@
+.courseNavBar {
+  width: 295px;
+  position: sticky;
+  top: 20px;
+  grid-area: overview;
+  max-height: calc(100vh - (20px * 2));
+}
+.courseVideoPlayer {
+  position: sticky;
+  max-height: calc(100vh - (20px * 2));
+}

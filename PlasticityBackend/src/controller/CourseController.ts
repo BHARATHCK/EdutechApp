@@ -16,7 +16,7 @@ export class CourseController {
 
   async getCourseById(request: Request, response: Response, next: NextFunction) {
     let course: any;
-    console.log("COURSE ID RECEIVED ******* : ", request.body.params.courseId);
+
     try {
       course = await this.courseRepository.findOne({
         where: {
@@ -26,8 +26,10 @@ export class CourseController {
           videos: true,
         },
       });
+      if (!course) {
+        course = 404;
+      }
     } catch (error) {
-      console.log("ERROR OCCURED : ", error);
       course = { error: error };
     }
 
@@ -35,28 +37,68 @@ export class CourseController {
   }
 
   async save(request: Request, response: Response, next: NextFunction) {
+    const newVideos: Video[] = [];
     const newCourse = new Course();
-    newCourse.author = request.body.params.author;
-    newCourse.courseName = request.body.params.courseName;
-    newCourse.courseType = request.body.params.courseType;
-    newCourse.isPublished = request.body.params.isPublished;
-    newCourse.notes = request.body.params.notes;
+    try {
+      newCourse.author = request.body.params.author;
+      newCourse.courseName = request.body.params.courseName;
+      newCourse.courseType = request.body.params.courseType;
+      newCourse.isPublished = request.body.params.isPublished;
+      newCourse.notes = request.body.params.notes;
 
-    const newVideo = new Video();
-    newVideo.author = request.body.params.author;
-    newVideo.videoTitle = request.body.params.video.title;
-    newVideo.videoUrl = request.body.params.video.url;
-    newVideo.videoDescription = request.body.params.video.description;
-    newVideo.course = newCourse;
-    let entitySaved = true;
+      // Handle videos
+      request.body.params.videos.map((video: Video) => {
+        // Create all videos
+        const newVideo = new Video();
+        newVideo.author = video.author;
+        newVideo.videoTitle = video.videoTitle;
+        newVideo.videoUrl = video.videoUrl;
+        newVideo.videoDescription = video.videoDescription;
+        newVideo.course = newCourse;
+
+        //Push to video[] entity
+        newVideos.push(newVideo);
+      });
+    } catch (error) {
+      return 500;
+    }
+
+    let entitySaved = 200;
     try {
       await this.courseRepository.save(newCourse);
-      await this.videoRepository.save(newVideo);
+      await this.videoRepository.save(newVideos);
     } catch (error) {
-      console.log(error);
-      entitySaved = false;
+      entitySaved = 400;
     }
 
     return entitySaved;
+  }
+
+  async deleteCourseById(request: Request, response: Response, next: NextFunction) {
+    if (!request.session.user) {
+      return 401;
+    }
+
+    let isDeleted = true;
+    try {
+      let courseToRemove = await this.courseRepository.findOne({
+        where: { id: parseInt(request.body.params.courseId) },
+        relations: {
+          videos: true,
+        },
+      });
+
+      if (!courseToRemove) {
+        return 404;
+      }
+
+      await this.videoRepository.remove(courseToRemove.videos);
+      await this.courseRepository.delete({ id: courseToRemove.id });
+    } catch (error) {
+      console.log("Error while deleting : ", error);
+      isDeleted = false;
+    }
+
+    return isDeleted;
   }
 }

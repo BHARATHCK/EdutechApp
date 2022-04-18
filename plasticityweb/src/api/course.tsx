@@ -9,7 +9,6 @@ export async function createCourse(params: {
   author: string;
   video: string;
 }): Promise<Course> {
-  console.log("CREATING COURSE : ", params);
   const response = await redaxios.post(
     "http://localhost:3000/createcourse",
     { params },
@@ -29,5 +28,15 @@ export async function getCourse(params: { courseId: number }): Promise<Course> {
     { params },
     { withCredentials: true },
   );
+  return response.data;
+}
+
+export async function deleteCourse(params: { courseId: number }): Promise<Course> {
+  const response = await redaxios.post(
+    "http://localhost:3000/deleteCourse",
+    { params },
+    { withCredentials: true },
+  );
+
   return response.data;
 }

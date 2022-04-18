@@ -24,3 +24,8 @@ export interface Video {
   author: string;
   videoDescription: string;
 }
+
+export interface appError {
+  message: string;
+  appStatus: number;
+}

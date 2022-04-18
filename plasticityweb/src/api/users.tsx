@@ -11,6 +11,7 @@ export async function signUp(params: {
   firstName: string;
   lastName: string;
   password: string;
+  role: string;
 }): Promise<User> {
   const response = await redaxios.post(
     "http://localhost:3000/signup",

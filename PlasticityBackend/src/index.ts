@@ -46,7 +46,7 @@ AppDataSource.initialize()
     // cors
     const corsOptions = {
       origin: [process.env.WEB_APP_URL || ""],
-      credentials: true, // <-- REQUIRED backend setting
+      credentials: true, // For getting cookies and setting them on headers
     };
 
     // set cors
@@ -87,17 +87,6 @@ AppDataSource.initialize()
 
     // start express server
     app.listen(3000);
-
-    // // insert Teacher credential for testing
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Richard",
-    //         lastName: "Feynman",
-    //         email: "richard.feynman@plasticity.com",
-    //         role: "teacher",
-    //         isActive: true
-    //     })
-    // )
 
     console.log("Server has started on port 3000.");
   })

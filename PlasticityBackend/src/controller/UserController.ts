@@ -23,14 +23,13 @@ export class UserController {
   }
 
   async Login(request: Request, response: Response) {
-    console.log(request.body);
     const user = await this.userRepository.findOne({
       where: {
         email: request.body.params.email,
       },
     });
 
-    if (!user) return "Wrong Email or Password";
+    if (!user) return 409;
 
     const validPassword = await bcrypt.compare(request.body.params.password, user?.password);
 
@@ -52,15 +51,30 @@ export class UserController {
     newUser.email = request.body.params.email;
     newUser.firstName = request.body.params.firstName;
     newUser.lastName = request.body.params.lastName;
-    newUser.role = "student";
+    newUser.role = request.body.params.role;
     newUser.isActive = true;
 
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(request.body.params.password, salt);
 
-    await this.userRepository.save(newUser);
+    let userCreated = true;
+    let errorMessage;
 
-    request.session.user = newUser;
+    try {
+      await this.userRepository.save(newUser);
+    } catch (error) {
+      console.log("ERROR While creating user : ", error);
+      userCreated = false;
+      errorMessage = error;
+      if (error.code == "23505" || error.code == 23505) {
+        userCreated = false;
+        return 409;
+      }
+    }
+
+    if (userCreated) {
+      request.session.user = newUser;
+    }
 
     return createResponseUser(newUser);
   }

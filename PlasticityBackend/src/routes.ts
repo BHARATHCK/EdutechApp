@@ -21,19 +21,13 @@ export const Routes = [
     action: "save",
   },
   {
-    method: "delete",
-    route: "/users/:id",
-    controller: UserController,
-    action: "remove",
-  },
-  {
     method: "post",
     route: "/login",
     controller: UserController,
     action: "Login",
   },
   {
-    method: "get",
+    method: "delete",
     route: "/logout",
     controller: UserController,
     action: "Logout",
@@ -49,6 +43,12 @@ export const Routes = [
     route: "/createcourse",
     controller: CourseController,
     action: "save",
+  },
+  {
+    method: "post",
+    route: "/deleteCourse",
+    controller: CourseController,
+    action: "deleteCourseById",
   },
   {
     method: "get",
