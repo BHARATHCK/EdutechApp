@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Form renders correctly 1`] = `
+<div
+  className="css-gmuwbf"
+>
+  <div
+    className="loginForm css-1s0xmce"
+  >
+    <form
+      action="#"
+      onReset={[Function]}
+      onSubmit={[Function]}
+    >
+      <div
+        className="chakra-form-control css-0"
+        role="group"
+      >
+        <label
+          className="chakra-form__label css-uvho5g"
+          htmlFor="email"
+          id="field-1-label"
+        >
+          Email
+        </label>
+        <input
+          className="chakra-input css-0"
+          disabled={false}
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="Email"
+          readOnly={false}
+          required={false}
+          value=""
+        />
+      </div>
+      <div
+        className="chakra-form-control css-0"
+        role="group"
+      >
+        <label
+          className="chakra-form__label css-uvho5g"
+          htmlFor="password"
+          id="field-1-label"
+        >
+          Password
+        </label>
+        <input
+          className="chakra-input css-0"
+          disabled={false}
+          id="password"
+          name="password"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="Password"
+          readOnly={false}
+          required={false}
+          type="password"
+          value=""
+        />
+      </div>
+      <div
+        className="css-dvxtzn"
+      >
+        <button
+          className="chakra-button css-gz9hhv"
+          data-testid="loginButton"
+          type="submit"
+        >
+          Log In
+        </button>
+        <button
+          className="chakra-button css-1tlxye4"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          Join Plasticity Instead
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Login Form with context routed to login page with context 1`] = `null`;

@@ -1,12 +1,13 @@
 import * as React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(<App />);
 
-// PWA Config -> TODO
 serviceWorker.register();
 
 // If you want to start measuring performance in your app, pass a function

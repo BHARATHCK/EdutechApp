@@ -111,7 +111,7 @@ const CreateCourse = () => {
                     <Field name="courseName">
                       {({ field, form }: any) => (
                         <FormControl isInvalid={form.errors.courseName && form.touched.courseName}>
-                          <FormLabel htmlFor="courseName">Course name</FormLabel>
+                          <FormLabel htmlFor="courseName">Course Name</FormLabel>
                           <Input
                             size="md"
                             {...field}
@@ -123,7 +123,9 @@ const CreateCourse = () => {
                               props.handleChange(e);
                             }}
                           />
-                          <FormErrorMessage>{form.errors.courseName}</FormErrorMessage>
+                          <FormErrorMessage data-testid="courseNameError">
+                            {form.errors.courseName}
+                          </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
@@ -145,7 +147,9 @@ const CreateCourse = () => {
                             <option>Video Only</option>
                             <option>Video + Notes</option>
                           </Select>
-                          <FormErrorMessage>{form.errors.courseType}</FormErrorMessage>
+                          <FormErrorMessage data-testid="courseTypeError">
+                            {form.errors.courseType}
+                          </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
@@ -165,7 +169,9 @@ const CreateCourse = () => {
                               props.handleChange(e);
                             }}
                           />
-                          <FormErrorMessage>{form.errors.description}</FormErrorMessage>
+                          <FormErrorMessage data-testid="descriptionError">
+                            {form.errors.description}
+                          </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
@@ -186,7 +192,9 @@ const CreateCourse = () => {
                               props.handleChange(e);
                             }}
                           />
-                          <FormErrorMessage>{form.errors.isPublished}</FormErrorMessage>
+                          <FormErrorMessage data-testid="isPublishedError">
+                            {form.errors.isPublished}
+                          </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>

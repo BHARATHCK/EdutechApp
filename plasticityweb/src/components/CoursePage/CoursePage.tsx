@@ -26,7 +26,6 @@ const CoursePage = () => {
     if (!courseId) return;
     getCourse({ courseId: courseid })
       .then((data: Course) => {
-        console.log("RESPONSE : ", data);
         setCourse(data);
       })
       .catch((error) => {

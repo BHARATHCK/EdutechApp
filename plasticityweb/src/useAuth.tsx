@@ -50,7 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   // Login function to verify user and set user state on success and redirect to home.
   function login(email: string, password: string) {
     setLoading(true);
-
     const response = new Promise((resolve, reject) => {
       sessionsApi
         .Login({ email, password })

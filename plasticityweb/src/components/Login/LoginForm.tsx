@@ -15,7 +15,7 @@ import useAuth from "../../useAuth";
 import PlasticityButton from "../PlasticityButton/PlasticityButton";
 import { useNavigate } from "react-router-dom";
 
-const LoginForm = () => {
+const LoginForm = (testProps: any) => {
   const { login, error, loading, user } = useAuth();
   const navigate = useNavigate();
 
@@ -40,6 +40,7 @@ const LoginForm = () => {
             login(values.email, values.password)
               .then((data: any) => {
                 // Handled by router - Nothing to do here
+                testProps();
               })
               .catch((error: any) => {
                 if (error.status == 409) {
@@ -56,7 +57,9 @@ const LoginForm = () => {
                   <FormControl isInvalid={form.errors.email && form.touched.email}>
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <Input {...field} id="email" placeholder="Email" />
-                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                    <FormErrorMessage data-testid="emailError">
+                      {form.errors.email}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -65,12 +68,21 @@ const LoginForm = () => {
                   <FormControl isInvalid={form.errors.password && form.touched.password}>
                     <FormLabel htmlFor="password">Password</FormLabel>
                     <Input {...field} id="password" type="password" placeholder="Password" />
-                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                    <FormErrorMessage data-testid="passwordError">
+                      {form.errors.password}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
               <Flex flexDir="column" alignItems="center">
-                <Button mt={4} mb={4} colorScheme="teal" isLoading={loading} type="submit">
+                <Button
+                  mt={4}
+                  mb={4}
+                  colorScheme="teal"
+                  isLoading={loading}
+                  type="submit"
+                  data-testid="loginButton"
+                >
                   Log In
                 </Button>
                 <PlasticityButton

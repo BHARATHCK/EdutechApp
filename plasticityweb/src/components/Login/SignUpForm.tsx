@@ -71,7 +71,9 @@ const SignUpForm = () => {
                   <FormControl isInvalid={form.errors.firstName && form.touched.firstName}>
                     <FormLabel htmlFor="firstName">First name</FormLabel>
                     <Input size="md" {...field} id="firstName" placeholder="First Name" />
-                    <FormErrorMessage>{form.errors.firstName}</FormErrorMessage>
+                    <FormErrorMessage data-testid="firstNameError">
+                      {form.errors.firstName}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -80,7 +82,9 @@ const SignUpForm = () => {
                   <FormControl isInvalid={form.errors.lastName && form.touched.lastName}>
                     <FormLabel htmlFor="lastName">Last name</FormLabel>
                     <Input {...field} id="lastName" placeholder="Last name" />
-                    <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                    <FormErrorMessage data-testid="lastNameError">
+                      {form.errors.lastName}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -89,7 +93,9 @@ const SignUpForm = () => {
                   <FormControl isInvalid={form.errors.email && form.touched.email}>
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <Input {...field} id="email" placeholder="Email" />
-                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                    <FormErrorMessage data-testid="emailError">
+                      {form.errors.email}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -101,7 +107,7 @@ const SignUpForm = () => {
                       <option>student</option>
                       <option>teacher</option>
                     </Select>
-                    <FormErrorMessage>{form.errors.role}</FormErrorMessage>
+                    <FormErrorMessage data-testid="roleError">{form.errors.role}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -110,7 +116,9 @@ const SignUpForm = () => {
                   <FormControl isInvalid={form.errors.password && form.touched.password}>
                     <FormLabel htmlFor="password">Password</FormLabel>
                     <Input {...field} id="password" type="password" placeholder="Password" />
-                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                    <FormErrorMessage data-testid="passwordError">
+                      {form.errors.password}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -121,14 +129,16 @@ const SignUpForm = () => {
                       form.errors.passwordConfirmation && form.touched.passwordConfirmation
                     }
                   >
-                    <FormLabel htmlFor="passwordConfirmation">Password</FormLabel>
+                    <FormLabel htmlFor="passwordConfirmation">Re-Type Password</FormLabel>
                     <Input
                       {...field}
                       id="passwordConfirmation"
                       type="password"
                       placeholder="Re-Type Password"
                     />
-                    <FormErrorMessage>{form.errors.passwordConfirmation}</FormErrorMessage>
+                    <FormErrorMessage data-testid="passwordConfirmationError">
+                      {form.errors.passwordConfirmation}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
