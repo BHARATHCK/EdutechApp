@@ -29,7 +29,7 @@
 - Postgres SQL (Main DB).
 - Redis (DB For storing session).
 - TypeORM.
-- AWS S3 for string videos.
+- AWS S3 for storing videos.
 
 ## Deployment
 
