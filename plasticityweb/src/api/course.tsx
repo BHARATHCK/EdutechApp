@@ -10,7 +10,7 @@ export async function createCourse(params: {
   video: string;
 }): Promise<Course> {
   const response = await redaxios.post(
-    "http://localhost:3000/createcourse",
+    `${process.env.REACT_APP_BACKEND_URL}/createcourse`,
     { params },
     { withCredentials: true },
   );
@@ -18,13 +18,15 @@ export async function createCourse(params: {
 }
 
 export async function getAllCourses(): Promise<Course[]> {
-  const response = await redaxios.get("http://localhost:3000/courses", { withCredentials: true });
+  const response = await redaxios.get(`${process.env.REACT_APP_BACKEND_URL}/courses`, {
+    withCredentials: true,
+  });
   return response.data;
 }
 
 export async function getCourse(params: { courseId: number }): Promise<Course> {
   const response = await redaxios.post(
-    "http://localhost:3000/course",
+    `${process.env.REACT_APP_BACKEND_URL}/course`,
     { params },
     { withCredentials: true },
   );
@@ -33,7 +35,7 @@ export async function getCourse(params: { courseId: number }): Promise<Course> {
 
 export async function deleteCourse(params: { courseId: number }): Promise<Course> {
   const response = await redaxios.post(
-    "http://localhost:3000/deleteCourse",
+    `${process.env.REACT_APP_BACKEND_URL}/deleteCourse`,
     { params },
     { withCredentials: true },
   );
