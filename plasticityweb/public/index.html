@@ -30,10 +30,10 @@
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
           navigator.serviceWorker
-            .register("./worker.js")
+            .register("./service-worker.js")
             .then(
               function (registration) {
-                console.log("path used : ", "./worker.js");
+                console.log("path used : ", "./service-worker.js");
                 console.log("Worker registration successful", registration.scope);
               },
               function (err) {
